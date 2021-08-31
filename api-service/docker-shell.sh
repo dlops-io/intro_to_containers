@@ -10,10 +10,10 @@ export IMAGE_NAME="api-server"
 export BASE_DIR=$(pwd)
 export PERSISTENT_DIR=$(pwd)/../persistent-folder/
 
-# build the image based on the Dockerfile
+# Build the image based on the Dockerfile
 docker build -t $IMAGE_NAME -f Dockerfile .
 
-# create the container
+# Create the container
 # --mount: Attach a filesystem mount to the container
 # -p: Publish a container's port(s) to the host (host_port: container_port) (source: https://dockerlabs.collabnix.com/intermediate/networking/ExposingContainerPort.html)
 # -e: set environment variables
