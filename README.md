@@ -57,3 +57,15 @@ To run development api service run `uvicorn_server` from the docker shell
 Test the API service by going to `http://localhost:9500/`
 
 * We want to run database-server before api-service because we want to have the API set up to connect to the database, and the API is then connected to the NGINX server, which talks with the user to get input regarding the data in the database *
+
+## Frontend App Container
+### Starting the Container
+Type the command 
+-  `cd frontend-app`
+- Run `sh docker-shell.sh` or `docker-shell.bat` for windows
+
+To install a new node package use `npm install <package name>` from the docker shell
+
+To run development web server run `http-server -s` from the docker shell
+
+Test the API service by going to `http://localhost:8080/`
