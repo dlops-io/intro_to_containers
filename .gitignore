@@ -1,0 +1,4 @@
+# misc
+geckodriver.log
+.DS_Store
+/persistent-folder
