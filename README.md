@@ -69,8 +69,22 @@ To run development web server run `http-server` from the docker shell
 
 Test the API service by going to `http://localhost:8080/`
 
+---
+#### **Code walk through**
+---
+
 ## Download Images Container
 ### Starting the Container
+First let is create a `persistent-folder` that will be used to save the downloaded images and also mounted to multiple containers so we can share content between containers.
+- Create a folder `persistent-folder` at the same level as our container folders. So you should have your directories like this:
+```
+├── api-service
+├── database-server
+├── download-images
+├── frontend-app
+└── persistent-folder
+```
+
 Type the command 
 -  `cd download-images`
 - Run `sh docker-shell.sh` or `docker-shell.bat` for windows
@@ -91,7 +105,11 @@ where
 - `search` contains the search terms
 - `opp` is the operation whether to `search` or `verify` the images
 
-Images will be downloaded in a sub-directory named *<persistent-folder>/dataset*
+Images will be downloaded in a sub-directory named *persistent-folder/dataset*
+
+---
+#### **Code walk through**
+---
 
 ## API Service Container
 ### Starting the Container
@@ -105,4 +123,75 @@ To run development api service run `uvicorn_server` from the docker shell
 
 Test the API service by going to `http://localhost:9500/`
 
-* We want to run database-server before api-service because we want to have the API set up to connect to the database, and the API is then connected to the NGINX server, which talks with the user to get input regarding the data in the database *
+---
+#### **Code walk through**
+---
+
+## Exercise
+
+Since we have 3 containers running let's access data across them:
+
+### 1) Read the list of of images downloaded by the `download-images` from the `api-service` container and expose it as a REST API
+
+* Add a new route (A Fast API method to generate a REST API) to return a list of labels and path
+* Add this code block to the api/service.py:
+```
+@app.get("/get_demo_images")
+async def get_demo_images():
+
+    label_names = glob(os.path.join(dataset_path, '*'))
+    print("Labels:", label_names)
+
+    # Generate a list of labels and path to images
+    data_list = []
+    for label in label_names:
+        # Images
+        image_files = os.listdir(label)
+        data_list.extend([(label.split("/")[-1], os.path.join(dataset_path, label, f))
+                         for f in image_files])
+
+    print("Full size of the dataset:", len(data_list))
+    print("data_list:", data_list[:5])
+
+    # Convert to json
+    data_list = [{'label': itm[0], 'path':itm[1]} for itm in data_list]
+
+    return data_list
+```
+* Go to `http://localhost:9500/get_demo_images` and what do you see?
+
+### 2) Call the REST API from our Frontend App
+* In our `frontend-app` container we will add a javascript code block to talk to the backend to read the list of data and display it in HTML
+* Open `index.html` file and add this code block in the `<script></script>` section:
+```
+    # Add in script to pull demo data 
+    // API URL
+    var BASE_API_URL = 'http://localhost:9500/';
+    axios.defaults.baseURL = BASE_API_URL;
+
+    function build_image_list() {
+        // Get a reference to the UI element image_list_container
+        var image_list_container = document.getElementById("image_list_container");
+
+        axios.get('/get_demo_images')
+            .then((response) => {
+                console.log(response.data);
+
+                // build list
+                let list = "<ol>";
+                response.data.forEach(function (item, index) {
+                    list += "<li>" + item["label"] + " : " + item["path"] + "</li>"
+                });
+
+
+                list += "</ol>"
+
+                image_list_container.innerHTML = list;
+            });
+    }
+
+    // Call Build image list
+    build_image_list();
+```
+
+* Go to `http://localhost:8080/` and what do we see now?
