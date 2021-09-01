@@ -89,7 +89,7 @@ Type the command
 -  `cd download-images`
 - Run `sh docker-shell.sh` or `docker-shell.bat` for windows
 
-in the `download-images` directory to startup (build and run) the docker container. The container contains a Linux kernel and will install all dependencies for the image downloader. Running this command for the first time will take around 190 seconds (depending on the system you're using). This command automatically builds and runs the Docker container, where you should automatically be entered into the Linux kernel in the **app** Python virtual environment.
+in the `download-images` directory to startup (build and run) the docker container. The container contains a Linux kernel and will install all dependencies for the image downloader. Running this command for the first time will take around 90 seconds (depending on the system you're using). This command automatically builds and runs the Docker container, where you should automatically be entered into the Linux kernel in the **app** Python virtual environment.
 
 If you `exit` the Docker container, and run the command `docker images | grep download-images`, you'll see some nice information about the image name, tag, image ID, creation date, and size
 
@@ -195,3 +195,33 @@ async def get_demo_images():
 ```
 
 * Go to `http://localhost:8080/` and what do we see now?
+
+## Database Server Container
+
+Here we will setup a database server and a database client. We will use PostgreSQL as our database server and [dbmate](https://github.com/amacneil/dbmate) as our database client and migration tool. 
+
+### Starting the Container
+Type the command 
+-  `cd database-server`
+- Run `sh docker-shell.sh` or `docker-shell.bat` for windows
+- Can exit the docker shell without shutting down by typing `ctrl+d`
+- Can reconnect to docker shell by typing...
+- Check migration status: `dbmate status`
+- To shut down docker container, type `ctrl+c`
+
+
+#### Dbmate Commands Reference
+
+```sh
+dbmate --help    # print usage help
+dbmate new       # generate a new migration file
+dbmate up        # create the database (if it does not already exist) and run any pending migrations
+dbmate create    # create the database
+dbmate drop      # drop the database
+dbmate migrate   # run any pending migrations
+dbmate rollback  # roll back the most recent migration
+dbmate down      # alias for rollback
+dbmate status    # show the status of all migrations (supports --exit-code and --quiet)
+dbmate dump      # write the database schema.sql file
+dbmate wait      # wait for the database server to become available
+```
