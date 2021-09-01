@@ -18,9 +18,46 @@ Follow the [instructions](https://code.visualstudio.com/download) for your opera
 If you already have a preferred text editor, skip this step.  
 
 ### Clone the github repository
-- Clone or downloadhttps://github.com/dlops-io/intro_to_containers)
+- Clone or download from [here](https://github.com/dlops-io/intro_to_containers)
+
+
+## Make sure we do not have any running containers and clear up an unused images
+* Run `docker container ls`
+* Stop any container that is running
+* Run `docker system prune`
+* Run `docker image ls`
 
 ## Frontend App Container
+
+### Initial Exercise
+
+* Build image by running `docker build -t frontend-app -f Dockerfile .`
+* Run container by running `docker run --rm --name frontend-app -ti frontend-app`
+
+* Can we see the index.html inside the `frontend-app` container?
+* Since `http-server` is installed in the container we can run it by typing `http-server` in the docker shell
+* Go to `http://localhost:8080/` on a browser and do we see anything?
+
+* Where is our index.html?
+
+* Now exit the `frontend-app` container and run `docker run --rm --name frontend-app -ti --mount type=bind,source="$(pwd)",target=/app frontend-app` for windows put in your current working directory path
+* Run `http-server` in the docker shell
+
+* Go to `http://localhost:8080/` on a browser and do we see anything?
+
+* We need to expose the port `8080` from the container to the host so that we can access the web site running inside the `frontend-app` container
+
+* Now exit the `frontend-app` container and run `docker run --rm --name frontend-app -ti --mount type=bind,source="$(pwd)",target=/app -p 8080:8080 frontend-app` for windows put in your current working directory path
+
+* Run `http-server` in the docker shell
+
+* Go to `http://localhost:8080/` and Yeah!!! you should see our app in the browser
+
+
+### Best Practice we will be using
+* Rather that type in all the commands for `docker build` and `docker run` with all the parameters each time going forward we will write them into a `docker-shell` file so that it is easier for us to use and also can be share by your team member so the container is started up in the exact way by everyone
+
+
 ### Starting the Container
 Type the command 
 -  `cd frontend-app`
@@ -28,7 +65,7 @@ Type the command
 
 To install a new node package use `npm install <package name>` from the docker shell
 
-To run development web server run `http-server -s` from the docker shell
+To run development web server run `http-server` from the docker shell
 
 Test the API service by going to `http://localhost:8080/`
 
