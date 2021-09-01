@@ -9,9 +9,7 @@
 # built-in libraries
 import os
 import argparse
-
-# third-party libraries
-import tensorflow as tf
+from glob import glob
 
 # function from downloader.py module
 from downloader import download_google_images
@@ -28,28 +26,27 @@ def main(nums, search, opp):
     # if a command option was NOT "download", verify the downloaded images can be read by Tensorflow
     elif opp == "verify":
         # Verify downloaded images
-        label_names = os.listdir(basedataset_path_path)
+        label_names = os.listdir(dataset_path)
+        print("Labels:", label_names)
+
+        # TODO: logic to verify downloaded images
+    elif opp == "savedb":
+        # Save all image labels and path into db
+        label_names = glob(os.path.join(dataset_path, '*'))
         print("Labels:", label_names)
 
         # Generate a list of labels and path to images
         data_list = []
         for label in label_names:
             # Images
-            image_files = os.listdir(os.path.join(dataset_path, label))
-            data_list.extend(
-                [(label, os.path.join(dataset_path, label, f)) for f in image_files])
+            image_files = os.listdir(label)
+            data_list.extend([(label.split("/")[-1], os.path.join(dataset_path, label, f))
+                              for f in image_files])
 
         print("Full size of the dataset:", len(data_list))
-        print(data_list[:5])
+        print("data_list:", data_list[:5])
 
-        for label, path in data_list:
-            try:
-                image = tf.io.read_file(path)
-                image = tf.image.decode_jpeg(image, channels=3)
-            except:
-                print(
-                    f'Path for file that could not be read as Tensorflow image: {path}')
-                os.remove(path)
+        # TODO: logic to save image labels and path into database
 
 
 if __name__ == "__main__":
