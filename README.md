@@ -209,6 +209,15 @@ Type the command
 - Check migration status: `dbmate status`
 - To shut down docker container, type `ctrl+c`
 
+#### Connecting to the database
+* Run `psql postgres://itc:awesome@itcdb-server:5436/itcdb` in the docker shell
+* Format to connect to postgres: postgres://<user is>:<password>@i<database server>:<port>/<database name>
+
+* Since we do not have any tables created we can check on some system tables, Run this select query `select table_catalog,table_schema,table_name,table_type from information_schema.tables limit 10;`
+
+* Next let us create a table in the database
+* Exit from the DB prompt so we are back in the dbmate prompt
+* Run `dbmate new image_metadata`, this will create a migration file
 
 #### Dbmate Commands Reference
 
@@ -225,3 +234,22 @@ dbmate status    # show the status of all migrations (supports --exit-code and -
 dbmate dump      # write the database schema.sql file
 dbmate wait      # wait for the database server to become available
 ```
+
+* In the migration file we just created added the following table creation scripts:
+```
+CREATE TABLE image_metadata (
+    id BIGSERIAL PRIMARY KEY,
+    label TEXT NOT NULL,
+    path TEXT NOT NULL
+);
+
+DROP TABLE IF EXISTS image_metadata;
+```
+
+* Run the DB migration so we create the table in the database. Run `dbmate up` (see db/migrations for what tables are created).
+* Run `psql postgres://itc:awesome@itcdb-server:5436/itcdb` in the docker shell and run the query `select * from image_metadata;` The table should exist but no data.
+* Exit from the DB prompt so we are back in the dbmate prompt
+* Run `dbmate rollback` to test our removing tables from the database
+* Run `dbmate up` again so we have the new table for storing image meta data in our database
+
+
