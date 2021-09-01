@@ -9,7 +9,7 @@ verify_ssl = true
 selenium = "*"
 user-agent = "*"
 requests = "*"
-tensorflow = "*"
+databases = "*"
 
 [requires]
 python_version = "3.7"

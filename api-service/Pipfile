@@ -22,7 +22,6 @@ passlib = {extras = ["bcrypt"], version = "*"}
 pytest = "*"
 pytest-asyncio = "*"
 google-auth = "*"
-tensorflow = "*"
 
 [requires]
 python_version = "3.8"
