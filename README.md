@@ -1,5 +1,9 @@
 # Introduction to Development using Containers
 
+In this tutorial we will setup three simple containers and use a persistent folder to share content from one to the other. The following architecture is what we will implement today:
+
+![Docker with Persistent Store](https://storage.googleapis.com/public_colab_images/docker/docker_with_persistent_storage.png)
+
 ## Prerequisites
 * Have Docker installed
 * Cloned this repository to your local machine with a terminal up and running
