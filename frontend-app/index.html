@@ -76,11 +76,39 @@
         </div>
     </div>
     <!-- Content -->
+<script type="text/javascript">
+    // Add in script to pull demo data 
+    // API URL
+    var BASE_API_URL = 'http://localhost:9500/';
+    axios.defaults.baseURL = BASE_API_URL;
 
-</body>
-<!-- Add Javascript -->
-<script>
+    function build_image_list() {
+        // Get a reference to the UI element image_list_container
+        var image_list_container = document.getElementById("image_list_container");
+
+        axios.get('/get_demo_images')
+            .then((response) => {
+                console.log(response.data);
+
+                // build list
+                let list = "<ol>";
+                response.data.forEach(function (item, index) {
+                    list += "<li>" + item["label"] + " : " + item["path"] + "</li>"
+                });
+
+
+                list += "</ol>"
+
+                image_list_container.innerHTML = list;
+            });
+    }
+
+    // Call Build image list
+    build_image_list();
 
 </script>
+</body>
+<!-- Add Javascript -->
+
 
 </html>
