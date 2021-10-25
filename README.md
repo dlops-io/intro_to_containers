@@ -71,7 +71,7 @@ To install a new node package use `npm install <package name>` from the docker s
 
 To run development web server run `http-server` from the docker shell
 
-Test the API service by going to `http://localhost:8080/`
+Test the web app by going to `http://localhost:8080/`
 
 ---
 #### **Code walk through**
